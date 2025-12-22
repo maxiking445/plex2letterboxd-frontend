@@ -47,7 +47,7 @@ def getImdbId(movie):
 
 def write_csv(sections, output, args):
     """Generate Letterboxd import CSV."""
-    with open(output, 'w', newline='') as f:
+    with open(output, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(['Title', 'Year', 'imdbID', 'Rating10', 'WatchedDate'])
 
