@@ -129,9 +129,9 @@ const docTemplate = `{
                 "summary": "returns current setings",
                 "responses": {
                     "200": {
-                        "description": "Sucessfully returned settings",
+                        "description": "Successfully returned settings",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Settings"
                         }
                     },
                     "400": {

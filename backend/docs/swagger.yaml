@@ -86,9 +86,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: Sucessfully returned settings
+          description: Successfully returned settings
           schema:
-            type: string
+            $ref: '#/definitions/models.Settings'
         "400":
           description: Settings may missing or are incomplete
           schema:

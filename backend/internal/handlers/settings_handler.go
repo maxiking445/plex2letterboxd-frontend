@@ -16,7 +16,7 @@ const SettingsPath = "./script/config.ini"
 // @Tags         Settings
 // @Accept       json
 // @Produce      json
-// @Success      200      {string} string  "Sucessfully returned settings"
+// @Success      200      {object} models.Settings  "Successfully returned settings"
 // @Failure      400      {string} string  "Settings may missing or are incomplete"
 // @Failure      500      {string} string  "Unknown error during execution"
 // @Router       /settings [GET]
