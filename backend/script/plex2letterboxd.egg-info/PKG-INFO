@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: plex2letterboxd
+Version: 1.4
+Summary: Export watched Plex movies to the Letterboxd import format.
+Author-email: Max Timkovich <max@timkovi.ch>
+Requires-Python: >=3
+Description-Content-Type: text/markdown
+Requires-Dist: plexapi>=4.15.7

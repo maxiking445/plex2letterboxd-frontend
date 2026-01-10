@@ -1,0 +1,8 @@
+pyproject.toml
+plex2letterboxd/__main__.py
+plex2letterboxd/plex2letterboxd.py
+plex2letterboxd.egg-info/PKG-INFO
+plex2letterboxd.egg-info/SOURCES.txt
+plex2letterboxd.egg-info/dependency_links.txt
+plex2letterboxd.egg-info/requires.txt
+plex2letterboxd.egg-info/top_level.txt

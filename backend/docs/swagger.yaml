@@ -1,0 +1,133 @@
+basePath: /
+definitions:
+  models.Settings:
+    properties:
+      baseurl:
+        type: string
+      token:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  title: BFF API
+  version: "1.0"
+paths:
+  /executeScript:
+    get:
+      consumes:
+      - application/json
+      description: executes plex2letterbox python script with current settings
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully executed export
+          schema:
+            type: string
+        "400":
+          description: Settings may missing or are incomplete
+          schema:
+            type: string
+        "500":
+          description: Unknown error during execution
+          schema:
+            type: string
+      summary: executes script
+      tags:
+      - Data
+  /exports:
+    get:
+      consumes:
+      - application/json
+      description: returns all exisitng exports under /data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully retreived exports
+          schema:
+            type: string
+        "500":
+          description: Unknown error during execution
+          schema:
+            type: string
+      summary: returns all existing exports
+      tags:
+      - Data
+  /exports/{id}:
+    get:
+      description: reads CSV
+      parameters:
+      - description: Export ID (Filename)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: CSV File
+          schema:
+            type: file
+        "404":
+          description: File not found
+          schema:
+            type: string
+      summary: returns CSV of export
+      tags:
+      - Data
+  /settings:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully returned settings
+          schema:
+            type: string
+        "400":
+          description: Settings may missing or are incomplete
+          schema:
+            type: string
+        "500":
+          description: Unknown error during execution
+          schema:
+            type: string
+      summary: returns current setings
+      tags:
+      - Settings
+  /settings/save:
+    post:
+      consumes:
+      - application/json
+      description: Receives baseurl and token and stores them in config.ini
+      parameters:
+      - description: Settings payload
+        in: body
+        name: settings
+        required: true
+        schema:
+          $ref: '#/definitions/models.Settings'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully saved settings
+          schema:
+            type: string
+        "400":
+          description: Settings may be missing or are incomplete
+          schema:
+            type: string
+        "500":
+          description: Unknown error during execution
+          schema:
+            type: string
+      summary: saves settings
+      tags:
+      - Settings
+swagger: "2.0"
