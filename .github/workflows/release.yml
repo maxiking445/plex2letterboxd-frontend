@@ -1,0 +1,76 @@
+name: Publish new Version
+on:
+  workflow_dispatch
+
+
+permissions:
+  contents: write
+  packages: write 
+  
+  
+jobs:
+
+        
+  determine-version:
+    runs-on: ubuntu-latest
+    outputs:
+      release-tag: ${{ steps.set-tag.outputs.release-tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine version
+        id: set-tag
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            NEW_TAG="v${{ github.event.inputs.version }}"
+          else
+            git fetch --tags
+            LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
+            if [ -z "$LATEST_TAG" ]; then
+              LATEST_TAG="v0.0.0"
+            fi
+            TAG="${LATEST_TAG#v}"
+            MAJOR=$(echo $TAG | cut -d. -f1)
+            MINOR=$(echo $TAG | cut -d. -f2)
+            PATCH=$(echo $TAG | cut -d. -f3)
+            PATCH=$((PATCH + 1))
+            NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+          fi
+          echo "NEW_TAG=$NEW_TAG"
+          echo "release-tag=$NEW_TAG" >> $GITHUB_OUTPUT        
+  create-github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [determine-version]
+
+    steps:
+      - name: Create GitHub Release
+        id: release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ needs.determine-version.outputs.release-tag }}
+          release_name: ${{ needs.determine-version.outputs.release-tag }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{secrets.GH_PAT}}
+  publish:
+    runs-on: ubuntu-latest
+    needs:
+      - determine-version
+      - create-github-release
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build and push Image
+      env:
+        RELEASE_TAG: ${{ needs.determine-version.outputs.release-tag }}
+      run: |
+        VERSION="${RELEASE_TAG#v}"
+        echo "Version without v: $VERSION"
+        docker login --username maxiking445 --password ${{secrets.GH_PAT}} ghcr.io 
+        docker build . --tag ghcr.io/maxiking445/plex2letterboxd-frontend:latest
+        docker build . --tag ghcr.io/maxiking445/plex2letterboxd-frontend:$VERSION
+        docker push ghcr.io/maxiking445/plex2letterboxd-frontend:latest
+        docker push ghcr.io/maxiking445plex2letterboxd-frontend:$VERSION   
+    
