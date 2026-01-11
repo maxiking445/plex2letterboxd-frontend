@@ -14,9 +14,9 @@
             </label>
 
             <div class="modal-actions">
-                <button class="save-btn">Test</button>
-                <button @click="validateAndSave" class="save-btn">Save</button>
-                <button @click="close" class="cancel-btn">Cancel</button>
+                <IconButton @buttonClick="" title="Test" :active=true icon="vial"> </IconButton>
+                <IconButton @buttonClick="validateAndSave" :active=true title="Save" icon="floppy-disk"> </IconButton>
+                <IconButton @buttonClick="close" title="Cancel"> </IconButton>
             </div>
         </div>
     </div>
@@ -26,6 +26,7 @@
 import { reactive, watch } from "vue";
 import { saveSettings, getSettings } from "@/service/ApiService";
 import { useToast } from "vue-toastification";
+import IconButton from "./IconButton.vue";
 
 const toast = useToast();
 
@@ -110,31 +111,5 @@ input {
     justify-content: flex-end;
     gap: 0.5rem;
     margin-top: 1rem;
-}
-
-.save-btn {
-    background-color: #3bb54a;
-    color: #181b20;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.cancel-btn {
-    background-color: #2d3138;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.save-btn:hover {
-    background-color: #2faa3e;
-}
-
-.cancel-btn:hover {
-    background-color: #44484f;
 }
 </style>

@@ -14,8 +14,19 @@
 
 
 import * as runtime from '../runtime';
+import type {
+  ModelsExport,
+} from '../models/index';
+import {
+    ModelsExportFromJSON,
+    ModelsExportToJSON,
+} from '../models/index';
 
 export interface ExportsIdGetRequest {
+    id: string;
+}
+
+export interface ExportsRemoveIdDeleteRequest {
     id: string;
 }
 
@@ -60,10 +71,10 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * returns all exisitng exports under /data
-     * returns all existing exports
+     * Returns all existing exports under /data
+     * Returns all existing exports
      */
-    async exportsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
+    async exportsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ModelsExport>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -78,18 +89,14 @@ export class DataApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        if (this.isJsonMime(response.headers.get('content-type'))) {
-            return new runtime.JSONApiResponse<string>(response);
-        } else {
-            return new runtime.TextApiResponse(response) as any;
-        }
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ModelsExportFromJSON));
     }
 
     /**
-     * returns all exisitng exports under /data
-     * returns all existing exports
+     * Returns all existing exports under /data
+     * Returns all existing exports
      */
-    async exportsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
+    async exportsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ModelsExport>> {
         const response = await this.exportsGetRaw(initOverrides);
         return await response.value();
     }
@@ -130,6 +137,49 @@ export class DataApi extends runtime.BaseAPI {
      */
     async exportsIdGet(requestParameters: ExportsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Blob> {
         const response = await this.exportsIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Deletes the CSV export file with the given ID
+     * Deletes a specific export
+     */
+    async exportsRemoveIdDeleteRaw(requestParameters: ExportsRemoveIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling exportsRemoveIdDelete().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/exports/remove/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        if (this.isJsonMime(response.headers.get('content-type'))) {
+            return new runtime.JSONApiResponse<string>(response);
+        } else {
+            return new runtime.TextApiResponse(response) as any;
+        }
+    }
+
+    /**
+     * Deletes the CSV export file with the given ID
+     * Deletes a specific export
+     */
+    async exportsRemoveIdDelete(requestParameters: ExportsRemoveIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
+        const response = await this.exportsRemoveIdDeleteRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

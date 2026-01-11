@@ -22,6 +22,8 @@ func main() {
 	mux.HandleFunc("/exports", handlers.GetAllExportsHandler)
 	mux.HandleFunc("/exports/{id}", handlers.GetExportHandler)
 
+	mux.HandleFunc("/exports/remove/{id}", handlers.DeleteExportHandler)
+
 	mux.HandleFunc("/settings", handlers.GetSettingsHandler)
 	mux.HandleFunc("/settings/save", handlers.SaveSettingsHandler)
 	mux.Handle("/swagger/", httpSwagger.WrapHandler)

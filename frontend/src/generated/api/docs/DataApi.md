@@ -5,8 +5,9 @@ All URIs are relative to */api*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**executeScriptGet**](DataApi.md#executescriptget) | **GET** /executeScript | executes script |
-| [**exportsGet**](DataApi.md#exportsget) | **GET** /exports | returns all existing exports |
+| [**exportsGet**](DataApi.md#exportsget) | **GET** /exports | Returns all existing exports |
 | [**exportsIdGet**](DataApi.md#exportsidget) | **GET** /exports/{id} | returns CSV of export |
+| [**exportsRemoveIdDelete**](DataApi.md#exportsremoveiddelete) | **DELETE** /exports/remove/{id} | Deletes a specific export |
 
 
 
@@ -73,11 +74,11 @@ No authorization required
 
 ## exportsGet
 
-> string exportsGet()
+> Array&lt;ModelsExport&gt; exportsGet()
 
-returns all existing exports
+Returns all existing exports
 
-returns all exisitng exports under /data
+Returns all existing exports under /data
 
 ### Example
 
@@ -110,7 +111,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**string**
+[**Array&lt;ModelsExport&gt;**](ModelsExport.md)
 
 ### Authorization
 
@@ -125,7 +126,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Sucessfully retreived exports |  -  |
+| **200** | Successfully retrieved exports |  -  |
 | **500** | Unknown error during execution |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
@@ -195,6 +196,75 @@ No authorization required
 |-------------|-------------|------------------|
 | **200** | CSV File |  -  |
 | **404** | File not found |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## exportsRemoveIdDelete
+
+> string exportsRemoveIdDelete(id)
+
+Deletes a specific export
+
+Deletes the CSV export file with the given ID
+
+### Example
+
+```ts
+import {
+  Configuration,
+  DataApi,
+} from '';
+import type { ExportsRemoveIdDeleteRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const api = new DataApi();
+
+  const body = {
+    // string | Export ID (Filename)
+    id: id_example,
+  } satisfies ExportsRemoveIdDeleteRequest;
+
+  try {
+    const data = await api.exportsRemoveIdDelete(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | `string` | Export ID (Filename) | [Defaults to `undefined`] |
+
+### Return type
+
+**string**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Export successfully deleted |  -  |
+| **404** | File not found |  -  |
+| **500** | Internal server error |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

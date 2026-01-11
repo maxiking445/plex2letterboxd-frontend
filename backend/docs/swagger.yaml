@@ -1,5 +1,14 @@
 basePath: /
 definitions:
+  models.Export:
+    properties:
+      Date:
+        type: string
+      ExportItemCount:
+        type: integer
+      Name:
+        type: string
+    type: object
   models.Settings:
     properties:
       baseurl:
@@ -38,21 +47,21 @@ paths:
       - Data
   /exports:
     get:
-      consumes:
-      - application/json
-      description: returns all exisitng exports under /data
+      description: Returns all existing exports under /data
       produces:
       - application/json
       responses:
         "200":
-          description: Sucessfully retreived exports
+          description: Successfully retrieved exports
           schema:
-            type: string
+            items:
+              $ref: '#/definitions/models.Export'
+            type: array
         "500":
           description: Unknown error during execution
           schema:
             type: string
-      summary: returns all existing exports
+      summary: Returns all existing exports
       tags:
       - Data
   /exports/{id}:
@@ -76,6 +85,33 @@ paths:
           schema:
             type: string
       summary: returns CSV of export
+      tags:
+      - Data
+  /exports/remove/{id}:
+    delete:
+      description: Deletes the CSV export file with the given ID
+      parameters:
+      - description: Export ID (Filename)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Export successfully deleted
+          schema:
+            type: string
+        "404":
+          description: File not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Deletes a specific export
       tags:
       - Data
   /settings:

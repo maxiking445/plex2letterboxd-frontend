@@ -45,26 +45,67 @@
         },
         "/exports": {
             "get": {
-                "description": "returns all exisitng exports under /data",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "Returns all existing exports under /data",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Data"
                 ],
-                "summary": "returns all existing exports",
+                "summary": "Returns all existing exports",
                 "responses": {
                     "200": {
-                        "description": "Sucessfully retreived exports",
+                        "description": "Successfully retrieved exports",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Export"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unknown error during execution",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/exports/remove/{id}": {
+            "delete": {
+                "description": "Deletes the CSV export file with the given ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Data"
+                ],
+                "summary": "Deletes a specific export",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Export ID (Filename)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Export successfully deleted",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "File not found",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "500": {
-                        "description": "Unknown error during execution",
+                        "description": "Internal server error",
                         "schema": {
                             "type": "string"
                         }
@@ -189,6 +230,20 @@
         }
     },
     "definitions": {
+        "models.Export": {
+            "type": "object",
+            "properties": {
+                "Date": {
+                    "type": "string"
+                },
+                "ExportItemCount": {
+                    "type": "integer"
+                },
+                "Name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Settings": {
             "type": "object",
             "properties": {

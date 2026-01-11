@@ -40,7 +40,9 @@ func ExecuteScriptHandler(w http.ResponseWriter, r *http.Request) {
 
 	csvFilename := fmt.Sprintf("letterboxd_%s.csv", timestamp)
 
-	cmd := exec.Command("python", "-m", "plex2letterboxd",
+	venvPython := "./plex2letterboxd/env/bin/python"
+
+	cmd := exec.Command(venvPython, "-m", "plex2letterboxd",
 		"-i", "config.ini",
 		"-o", ".."+DataPath+csvFilename,
 		"-s", "Filme")
@@ -58,22 +60,21 @@ func ExecuteScriptHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{
-		"message": "Export erfolgreich! CSV: letterboxd.csv",
+		"message": "Export Sucessfull! CSV: letterboxd.csv",
 	})
 }
 
-// GetAllEGetAllExportsHandlerxports godoc
+// GetAllExportsHandler godoc
 //
-// @Summary      returns all existing exports
-// @Description  returns all exisitng exports under /data
+// @Summary      Returns all existing exports
+// @Description  Returns all existing exports under /data
 // @Tags         Data
-// @Accept       json
 // @Produce      json
-// @Success      200      {string} string  "Sucessfully retreived exports"
-// @Failure      500      {string} string  "Unknown error during execution"
+// @Success      200 {array} models.Export "Successfully retrieved exports"
+// @Failure      500 {string} string "Unknown error during execution"
 // @Router       /exports [GET]
 func GetAllExportsHandler(w http.ResponseWriter, r *http.Request) {
-	var exports []models.Export
+	exports := []models.Export{}
 
 	files, err := os.ReadDir("./data")
 	if err != nil {
@@ -95,7 +96,6 @@ func GetAllExportsHandler(w http.ResponseWriter, r *http.Request) {
 			ExportItemCount: countEntrys(fileName),
 		})
 	}
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(exports)
 }
@@ -179,4 +179,42 @@ func GetExportHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", id))
 	w.WriteHeader(http.StatusOK)
 	w.Write(data)
+}
+
+// DeleteExportHandler godoc
+//
+// @Summary      Deletes a specific export
+// @Description  Deletes the CSV export file with the given ID
+// @Tags         Data
+// @Produce      json
+// @Param        id   path      string  true  "Export ID (Filename)"
+// @Success      200  {string}  string  "Export successfully deleted"
+// @Failure      404  {string}  string  "File not found"
+// @Failure      500  {string}  string  "Internal server error"
+// @Router       /exports/remove/{id} [delete]
+func DeleteExportHandler(w http.ResponseWriter, r *http.Request) {
+
+	pathParts := strings.Split(r.URL.Path, "/")
+	if len(pathParts) < 3 || pathParts[1] != "exports" {
+		http.Error(w, `{"error": "invalid path"}`, http.StatusBadRequest)
+		return
+	}
+
+	id := pathParts[3]
+	if id == "" {
+		http.Error(w, `{"error": "ID required"}`, http.StatusBadRequest)
+		return
+	}
+	filePath := filepath.Join("." + DataPath + id)
+	err := os.Remove(filePath)
+	if err != nil {
+		log.Printf("Failed to delete file %s: %v", filePath, err)
+		http.Error(w, `{"error": "Could not remove file"}`, http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": "Deletion Sucessfull!",
+	})
 }
