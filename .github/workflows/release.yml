@@ -72,5 +72,5 @@ jobs:
         docker build . --tag ghcr.io/maxiking445/plex2letterboxd-frontend:latest
         docker build . --tag ghcr.io/maxiking445/plex2letterboxd-frontend:$VERSION
         docker push ghcr.io/maxiking445/plex2letterboxd-frontend:latest
-        docker push ghcr.io/maxiking445plex2letterboxd-frontend:$VERSION   
+        docker push ghcr.io/maxiking445/plex2letterboxd-frontend:$VERSION   
     
