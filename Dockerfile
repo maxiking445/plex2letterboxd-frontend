@@ -19,33 +19,29 @@ COPY frontend/ .
 RUN npm run build
 
 
-# ====== STAGE 3: Build Vue Frontend ======
-FROM python:3.9-slim
+# ====== STAGE 3: Build Python Script Env ======
+FROM python:3.9-slim AS python-builder
 
-WORKDIR /app/backend
+WORKDIR /app/backend/script
 
-COPY backend/script ./script
-COPY backend/script/config.ini ./config.ini
-COPY backend/script/pyproject.toml ./pyproject.toml
-COPY backend/script/plex2letterboxd ./plex2letterboxd
+COPY backend/script/ .
 
-RUN python -m venv env
-
-
-RUN ./env/bin/pip install --no-cache-dir .
+RUN pip install --no-cache-dir .
 
 # ====== STAGE 4: Runtime ======
 FROM alpine:latest
 
 WORKDIR /app
 
-RUN apk add --no-cache nginx ca-certificates
+RUN apk add --no-cache nginx ca-certificates python3 py3-pip bash
 RUN mkdir -p /run/nginx
+
+RUN mkdir -p /app/data
 
 COPY --from=builder /myapp /myapp
 COPY --from=vue-builder /app/dist /usr/share/nginx/html
 COPY frontend/nginx.conf /etc/nginx/nginx.conf
-
+COPY --from=python-builder /app/backend/script ./script
 EXPOSE 80 8080
 
 CMD sh -c "/myapp & nginx -g 'daemon off;'"
