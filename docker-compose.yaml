@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: Plex2Letterboxd
+    ports:
+      - "9090:80"
+    restart: unless-stopped
