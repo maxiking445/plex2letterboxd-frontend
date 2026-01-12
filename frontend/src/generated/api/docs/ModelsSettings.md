@@ -7,6 +7,7 @@
 Name | Type
 ------------ | -------------
 `baseurl` | string
+`libarys` | Array&lt;string&gt;
 `token` | string
 
 ## Example
@@ -17,6 +18,7 @@ import type { ModelsSettings } from ''
 // TODO: Update the object below with actual values
 const example = {
   "baseurl": null,
+  "libarys": null,
   "token": null,
 } satisfies ModelsSettings
 

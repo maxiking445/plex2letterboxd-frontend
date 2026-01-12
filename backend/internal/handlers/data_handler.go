@@ -51,11 +51,14 @@ func ExecuteScriptHandler(w http.ResponseWriter, r *http.Request) {
 
 	venvPython := "./plex2letterboxd/env/bin/python"
 
+	libarys := loadSettingsFromFile().Libarys
+
 	cmd := exec.Command(venvPython, "-m", "plex2letterboxd",
 		"-i", "config.ini",
 		"-o", ".."+DataPath+csvFilename,
-		"-s", "Filme")
+		"-s")
 
+	cmd.Args = append(cmd.Args, libarys...)
 	cmd.Dir = "./script"
 
 	output, err := cmd.CombinedOutput()

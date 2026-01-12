@@ -258,6 +258,12 @@ const docTemplate = `{
                 "baseurl": {
                     "type": "string"
                 },
+                "libarys": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "token": {
                     "type": "string"
                 }

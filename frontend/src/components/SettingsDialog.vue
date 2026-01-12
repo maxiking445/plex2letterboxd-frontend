@@ -8,6 +8,12 @@
                 <input type="text" v-model="localSettings.baseurl" placeholder="http://localhost:32400" />
             </label>
 
+
+            <label>
+                Libarys
+                <input type="text" v-model="localSettings.libarys" placeholder="Movies,Series" />
+            </label>
+
             <label>
                 Plex Token
                 <div style="display: flex;">
@@ -51,7 +57,8 @@ const emit = defineEmits(["update:visible", "saved"]);
 
 const localSettings = reactive({
     baseurl: "",
-    token: ""
+    token: "",
+    libarys: ""
 });
 
 watch(() => props.visible, async (val) => {
@@ -60,7 +67,12 @@ watch(() => props.visible, async (val) => {
             const res = await getSettings();
             localSettings.baseurl = res.baseurl || "";
             localSettings.token = res.token || "";
+            localSettings.libarys = Array.isArray(res.libarys)
+                ? res.libarys.join(', ')
+                : (res.libarys || '');
+            console.error(res)
         } catch (err) {
+            console.error(err)
             toast.error("Could not load settings");
         }
     }
@@ -111,7 +123,13 @@ async function validateAndSave() {
     }
 
     try {
-        await saveSettings(localSettings);
+        await saveSettings({
+            token: localSettings.token,
+            baseurl: localSettings.baseurl,
+            libarys: localSettings.libarys
+                ? localSettings.libarys.split(",").map(s => s.trim())
+                : []
+        });
         toast.success("Settings saved!");
         close();
     } catch (err) {

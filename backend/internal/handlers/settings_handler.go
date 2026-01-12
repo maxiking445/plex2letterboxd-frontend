@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/maxiking445/plex-letterboxd-backend/internal/models"
 	"gopkg.in/ini.v1"
@@ -21,30 +22,23 @@ const SettingsPath = "./script/config.ini"
 // @Failure      500      {string} string  "Unknown error during execution"
 // @Router       /settings [GET]
 func GetSettingsHandler(w http.ResponseWriter, r *http.Request) {
+	config := loadSettingsFromFile()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(config)
+}
+
+func loadSettingsFromFile() models.Settings {
+
 	cfg, err := ini.Load(SettingsPath)
 	if err != nil {
-		http.Error(
-			w,
-			`{"error":"Settings extraction failed: `+err.Error()+`"}`,
-			http.StatusInternalServerError,
-		)
-		return
+		return models.Settings{}
 	}
 
 	config := &models.Settings{}
 
 	err = cfg.Section("auth").MapTo(config)
-	if err != nil {
-		http.Error(
-			w,
-			`{"error":"Settings parsing failed: `+err.Error()+`"}`,
-			http.StatusInternalServerError,
-		)
-		return
-	}
+	return *config
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(config)
 }
 
 // SaveSettingsHandler godoc
@@ -84,6 +78,7 @@ func SaveSettingsHandler(w http.ResponseWriter, r *http.Request) {
 	section := cfg.Section("auth")
 	section.Key("baseurl").SetValue(input.BaseURL)
 	section.Key("token").SetValue(input.Token)
+	section.Key("libarys").SetValue(strings.Join(input.Libarys, ","))
 
 	if err := cfg.SaveTo(SettingsPath); err != nil {
 		http.Error(

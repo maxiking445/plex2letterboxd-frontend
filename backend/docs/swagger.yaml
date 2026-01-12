@@ -13,6 +13,10 @@ definitions:
     properties:
       baseurl:
         type: string
+      libarys:
+        items:
+          type: string
+        type: array
       token:
         type: string
     type: object

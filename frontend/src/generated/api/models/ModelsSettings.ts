@@ -27,6 +27,12 @@ export interface ModelsSettings {
     baseurl?: string;
     /**
      * 
+     * @type {Array<string>}
+     * @memberof ModelsSettings
+     */
+    libarys?: Array<string>;
+    /**
+     * 
      * @type {string}
      * @memberof ModelsSettings
      */
@@ -51,6 +57,7 @@ export function ModelsSettingsFromJSONTyped(json: any, ignoreDiscriminator: bool
     return {
         
         'baseurl': json['baseurl'] == null ? undefined : json['baseurl'],
+        'libarys': json['libarys'] == null ? undefined : json['libarys'],
         'token': json['token'] == null ? undefined : json['token'],
     };
 }
@@ -67,6 +74,7 @@ export function ModelsSettingsToJSONTyped(value?: ModelsSettings | null, ignoreD
     return {
         
         'baseurl': value['baseurl'],
+        'libarys': value['libarys'],
         'token': value['token'],
     };
 }
