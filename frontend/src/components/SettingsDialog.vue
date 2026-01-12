@@ -1,7 +1,7 @@
 <template>
     <div v-if="visible" class="modal-overlay">
         <div class="modal">
-            <h3>Settings</h3>
+            <h3 class="modal-title">Settings</h3>
 
             <label>
                 Plex Base URL
@@ -10,29 +10,42 @@
 
             <label>
                 Plex Token
-                <input type="password" v-model="localSettings.token" placeholder="Your Plex Token" />
+                <div style="display: flex;">
+                    <input :type="showPassword ? 'text' : 'password'" v-model="localSettings.token"
+                        placeholder="Your Plex Token" />
+                    <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+                        <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" :style="{ color: '#888' }"
+                            fixed-width />
+                    </button>
+                </div>
             </label>
 
             <div class="modal-actions">
-                <IconButton @buttonClick="" title="Test" :active=true icon="vial"> </IconButton>
-                <IconButton @buttonClick="validateAndSave" :active=true title="Save" icon="floppy-disk"> </IconButton>
-                <IconButton @buttonClick="close" title="Cancel"> </IconButton>
+                <IconButton @buttonClick="handelTest" title="Test" :active=true icon="vial"
+                    :showAnimation="isLoadingTest">
+                </IconButton>
+                <IconButton @buttonClick="validateAndSave" :active=true title="Save" icon="floppy-disk"
+                    :showAnimation="false"> </IconButton>
+                <IconButton @buttonClick="close" title="Cancel" :showAnimation="false" :active="false"> </IconButton>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import { saveSettings, getSettings } from "@/service/ApiService";
 import { useToast } from "vue-toastification";
 import IconButton from "./IconButton.vue";
 
 const toast = useToast();
+const isLoadingTest = ref<boolean>(false)
 
 const props = defineProps({
     visible: Boolean
 });
+
+const showPassword = ref(false)
 
 const emit = defineEmits(["update:visible", "saved"]);
 
@@ -57,6 +70,40 @@ function close() {
     emit("update:visible", false);
 }
 
+async function handelTest() {
+    if (!localSettings.baseurl || !localSettings.token) {
+        toast.error("Please fill Base URL and Token first");
+        return;
+    }
+
+    try {
+        isLoadingTest.value = true;
+
+        const response = await fetch(
+            `${localSettings.baseurl}/identity`,
+            {
+                headers: {
+                    "X-Plex-Token": localSettings.token,
+                    "Accept": "application/json"
+                }
+            }
+        );
+
+        if (!response.ok) {
+            toast.error("Response was fault: ${err.message}");
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        toast.success(`Connection successful!`);
+    } catch (err: any) {
+        toast.error(`Connection failed: ${err.message}`);
+    } finally {
+        isLoadingTest.value = false;
+    }
+}
+
 async function validateAndSave() {
     if (!localSettings.baseurl || !localSettings.token) {
         toast.error("Base URL and Token are required");
@@ -74,6 +121,15 @@ async function validateAndSave() {
 </script>
 
 <style scoped>
+.modal-title {
+    color: #e5a00d;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5a00d;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -98,6 +154,28 @@ label {
     margin-bottom: 1rem;
 }
 
+input[type="password"] {
+    width: 100%;
+    padding: 0.5rem 2.5rem 0.5rem 0.5rem;
+    border-radius: 4px;
+    border: none;
+    margin-top: 0.25rem;
+    box-sizing: border-box;
+}
+
+.toggle-password {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #888;
+    padding: 0;
+    width: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 input {
     width: 100%;
     padding: 0.5rem;
@@ -111,5 +189,10 @@ input {
     justify-content: flex-end;
     gap: 0.5rem;
     margin-top: 1rem;
+}
+
+.eye-button {
+    height: 100%;
+
 }
 </style>

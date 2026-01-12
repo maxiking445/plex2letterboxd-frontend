@@ -5,6 +5,11 @@ go 1.22.2
 require github.com/swaggo/http-swagger v1.3.4
 
 require (
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/lithammer/shortuuid/v4 v4.2.0 // indirect
+)
+
+require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.20.0 // indirect

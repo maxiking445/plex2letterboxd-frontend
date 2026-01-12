@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	shortuuid "github.com/lithammer/shortuuid/v4"
 	"github.com/maxiking445/plex-letterboxd-backend/internal/models"
 	_ "github.com/maxiking445/plex-letterboxd-backend/internal/models"
 )
@@ -21,6 +22,14 @@ const (
 	DataPath    = "/data/"
 	Time_Format = "020106_1504"
 )
+
+func NewShortUUID() string {
+	id := shortuuid.New()
+	if len(id) < 6 {
+		return id
+	}
+	return id[:4]
+}
 
 // ExecuteScriptHandler godoc
 //
@@ -38,7 +47,7 @@ func ExecuteScriptHandler(w http.ResponseWriter, r *http.Request) {
 
 	timestamp := time.Now().Format(Time_Format)
 
-	csvFilename := fmt.Sprintf("letterboxd_%s.csv", timestamp)
+	csvFilename := fmt.Sprintf("Export_"+NewShortUUID()+"_%s.csv", timestamp)
 
 	venvPython := "./plex2letterboxd/env/bin/python"
 
@@ -85,10 +94,10 @@ func GetAllExportsHandler(w http.ResponseWriter, r *http.Request) {
 	for _, file := range files {
 		var fileName = file.Name()
 
-		re := regexp.MustCompile(`^letterboxd_(.+)\.csv$`)
+		re := regexp.MustCompile(`^Export_(.+)_(\d{6})_(\d{4})\.csv$`)
 		matches := re.FindStringSubmatch(fileName)
 
-		timestampStr := parseToTime(matches[1])
+		timestampStr := parseToTime(matches[2] + matches[3])
 
 		exports = append(exports, models.Export{
 			Name:            fileName,

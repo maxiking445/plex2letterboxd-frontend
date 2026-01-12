@@ -17,10 +17,22 @@ import {
   faSave,
   faDownload,
   faCheck,
-  faTrash
+  faTrash,
+  faEyeSlash,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faPlay, faGear, faVial, faSave, faDownload, faCheck, faTrash);
+library.add(
+  faPlay,
+  faGear,
+  faVial,
+  faSave,
+  faDownload,
+  faCheck,
+  faTrash,
+  faEyeSlash,
+  faEye
+);
 
 createApp(App)
   .use(VueSpinnersPlugin)

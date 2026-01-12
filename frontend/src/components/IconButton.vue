@@ -18,9 +18,9 @@ import { ref } from 'vue';
 
 const props = defineProps<{
     title: string;
-    icon: string;
+    icon?: string;
     active: Boolean;
-    showAnimation: Boolean;
+    showAnimation?: Boolean;
 }>();
 
 const iconColor = ref("black");
@@ -76,5 +76,4 @@ watch(
 .additional-link button:hover {
     background-color: #44484f;
 }
-
 </style>

@@ -9,7 +9,8 @@
             <div class="header-right">
                 <IconButton title="Start Export" icon="play" :show-animation=isLoading :active=true
                     @buttonClick="handleStart"></IconButton>
-                <IconButton title="Settings" icon="gear" :active=true @buttonClick="handleSetting" :show-animation=false></IconButton>
+                <IconButton title="Settings" icon="gear" :active=true @buttonClick="handleSetting"
+                    :show-animation=false></IconButton>
 
                 <a class="github-link" href="https://github.com/maxiking445/plex2letterboxd-frontend" target="_blank"
                     rel="noopener noreferrer">
@@ -32,12 +33,17 @@ const showSettings = ref(false);
 const toast = useToast()
 var isLoading = ref(false)
 
+
+const emit = defineEmits<{
+    (e: 'finishedExport'): void
+}>()
+
 const handleStart = () => {
     isLoading.value = true
     startExport().then(res => {
         console.log(res)
         isLoading.value = false
-        // UPDATE TABLE
+        emit('finishedExport')
     }).catch(err => {
         isLoading.value = false
         toast.error("Check your config, something went wrong.")
@@ -47,10 +53,8 @@ const handleStart = () => {
 const handleSetting = () => {
     showSettings.value = true;
 }
-
-
-
 </script>
+
 <style scoped>
 .header-right {
     display: flex;

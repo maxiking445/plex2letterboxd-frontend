@@ -4,7 +4,7 @@
     <div class="export-list">
       <div v-if="exports.length === 0" class="no-data">No exports yet</div>
       <div v-for="exp in exports" :key="exp.name" class="export-item">
-        <ExportItem :title="exp.name" :entries="exp.exportItemCount" :date="exp.date" />
+        <ExportItem :title="exp.name" :entries="exp.exportItemCount" :date="exp.date" @removed="handleRemoved" />
       </div>
     </div>
   </div>
@@ -14,18 +14,40 @@
 import ExportItem from "./ExportItem.vue";
 import { loadExports } from '@/service/ApiService';
 import { ModelsExport } from "@/generated/api";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const exports = ref<ModelsExport[]>([]);
 
+const props = defineProps<{
+  refreshTrigger: Number;
+}>();
+
 onMounted(async () => {
   try {
-    const res = await loadExports();
-    exports.value = res;
+    exports.value = await loadExports();
   } catch (err) {
     console.error("Error during load:", err);
   }
 });
+
+watch(
+  () => props.refreshTrigger,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) { 
+      console.log("TRIGGERT", newVal, oldVal)
+      try {
+        exports.value = await loadExports()
+      } catch (err) {
+        console.error("Reload failed:", err)
+      }
+    }
+  }
+)
+
+function handleRemoved(id: string) {
+  exports.value = exports.value.filter(e => e.name !== id)
+}
+
 </script>
 
 <style scoped>

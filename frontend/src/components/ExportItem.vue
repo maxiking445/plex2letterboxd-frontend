@@ -37,13 +37,21 @@ const props = defineProps<{
     entries: number;
 }>();
 
+
+const emit = defineEmits<{
+    (e: 'removed', id: string): void
+}>()
+
 const formattedDate = computed(() => {
     if (!props.date) return "";
     return new Intl.DateTimeFormat("en-EN", {}).format(new Date(props.date));
 });
 
 async function removeExport() {
-    ApiService.removeExport(props.title)
+    ApiService.removeExport(props.title).then(() => {
+        toast.success("Removed Export")
+        emit('removed', props.title)
+    })
 }
 
 async function downloadCSV() {
