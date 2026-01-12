@@ -1,61 +1,42 @@
-# Plex2Letterboxd
+# Plex2Letterboxd-frontend
 
-Exports watched movies from Plex to the [Letterboxd Import Format][import].
 
-Movies are exported to a CSV file containing:
-* Movie Title
-* Release Year
-* IMDb ID
-* User Rating
-* Last Watched Date
+<p align="center">
+  <img src="https://img.shields.io/github/license/maxiking445/plex2letterboxd-frontend" alt="License">
+  <img src="https://img.shields.io/github/v/release/maxiking445/plex2letterboxd-frontend" alt="Latest Release">
+</p>
 
-## Installation
 
-```console
-$ git clone https://github.com/mtimkovich/plex2letterboxd.git
-$ cd plex2letterbox
-$ python -m venv env
-$ source env/bin/activate
-$ pip install .
+For years I have been using this good old Python script from [mtimkovich](https://github.com/mtimkovich) — kudos to him! But since I run it every month, I tend to forget how to use it or sometimes run into weird errors.... That’s why I built this frontend wrapper that uses his tool behind the scenes and lets me deploy it next to Plex. Now I can just open this simple webapp every now and then and do my job with two clicks, instead of fussing around with Python all over again. If a feature is missing let me know :) 
+
+
+<p align="center">
+ <img src="docs/example01.png" width="300"/>
+</p>
+<p align="center">
+ <img src="docs/example02.png" width="700"/>
+</p>
+
+
+Features:
+* Shows all past exports
+* Test your Plex API
+* Configure which libary to export
+* Saves settings
+
+
+ToDo:
+* Errorhandling
+* Custom export naming
+
+## How to
+
+### Via Docker (recommended)
+Execute this to start frontend app in your selfhosted environment or local machine which runs docker.
+
+ ```bash
+docker run -d -p 5670:80 --name plex2letterboxd-frontend ghcr.io/maxiking445/plex2letterboxd-frontend:latest
 ```
+You can now open [http://localhost:5670](http://localhost:5670)
 
-### Docker
 
-Build the Docker image and pass a `letterboxd.csv` file into the Docker run command to store the generated CSV.
-
-```console
-$ docker build -t plex2letterboxd .
-$ docker run -v $(pwd)/config.ini:/app/config.ini -v $(pwd)/letterboxd.csv:/app/letterboxd.csv plex2letterboxd
-```
-
-## Usage
-
-Rename `config.ini.example` to `config.ini` and fill it with your Plex credentials.
-
-```console
-$ python -m plex2letterboxd
-```
-
-```
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INI, --ini INI     config file (default: config.ini)
-  -o OUTPUT, --output OUTPUT
-                        file to output to (default: letterboxd.csv)
-  -s SECTIONS [SECTIONS ...], --sections SECTIONS [SECTIONS ...]
-                        sections to grab from (default: ['Movies'])
-  -m MANAGED_USER, --managed-user MANAGED_USER
-                        name of managed user to export (default: None)
-  -w WATCHED_AFTER, --watched-after WATCHED_AFTER
-                        only return movies watched after the given time [format:
-                        YYYY-MM-DD or 30d] (default: None)
-```
-
-The generated CSV file can be uploaded to Letterboxd at https://letterboxd.com/import/.
-
-## Author
-
-[Max Timkovich][profile]
-
-[import]: https://letterboxd.com/about/importing-data/
-[profile]: https://letterboxd.com/djswerve/
