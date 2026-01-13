@@ -49,7 +49,7 @@ func ExecuteScriptHandler(w http.ResponseWriter, r *http.Request) {
 
 	csvFilename := fmt.Sprintf("Export_"+NewShortUUID()+"_%s.csv", timestamp)
 
-	venvPython := "./plex2letterboxd/env/bin/python"
+	venvPython := "./env/bin/python"
 
 	libarys := loadSettingsFromFile().Libarys
 

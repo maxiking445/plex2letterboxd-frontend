@@ -22,18 +22,19 @@ RUN npm run build
 # ====== STAGE 3: Build Python Script Env ======
 FROM python:3.9-slim AS python-builder
 
-WORKDIR /app/backend/script
+WORKDIR /script
 
 COPY backend/script/ .
 
-RUN pip install --no-cache-dir .
+RUN python -m venv /script/env && \
+    /script/env/bin/pip install --no-cache-dir --upgrade pip && \
+    /script/env/bin/pip install --no-cache-dir .
 
 # ====== STAGE 4: Runtime ======
-FROM alpine:latest
+FROM python:3.9-slim
 
 WORKDIR /app
-
-RUN apk add --no-cache nginx ca-certificates python3 py3-pip bash
+RUN apt-get update && apt-get install -y nginx ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /run/nginx
 
 RUN mkdir -p /app/data
@@ -41,7 +42,9 @@ RUN mkdir -p /app/data
 COPY --from=builder /myapp /myapp
 COPY --from=vue-builder /app/dist /usr/share/nginx/html
 COPY frontend/nginx.conf /etc/nginx/nginx.conf
-COPY --from=python-builder /app/backend/script ./script
+COPY --from=python-builder /script ./script
+
 EXPOSE 80 8080
+
 
 CMD sh -c "/myapp & nginx -g 'daemon off;'"

@@ -40,3 +40,34 @@ docker run -d -p 5670:80 --name plex2letterboxd-frontend ghcr.io/maxiking445/ple
 You can now open [http://localhost:5670](http://localhost:5670)
 
 
+### Build Docker Locally
+
+ ```bash
+docker compose build --no-cache
+docker compose up
+```
+### Install without Docker
+
+Node 22 required
+Go 1.23 required
+
+Install Pyhton
+ ```bash
+cd backend/script
+python -m venv env
+source env/bin/activate
+pip install .
+```
+Install npm
+ ```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Install Go
+ ```bash
+cd backend
+go mod tidy
+make run
+```
