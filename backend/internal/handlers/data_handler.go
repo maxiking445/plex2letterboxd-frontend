@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 
@@ -49,7 +50,7 @@ func ExecuteScriptHandler(w http.ResponseWriter, r *http.Request) {
 
 	csvFilename := fmt.Sprintf("Export_"+NewShortUUID()+"_%s.csv", timestamp)
 
-	venvPython := "./plex2letterboxd/env/bin/python"
+	venvPython := "./env/bin/python"
 
 	libarys := loadSettingsFromFile().Libarys
 
@@ -100,7 +101,7 @@ func GetAllExportsHandler(w http.ResponseWriter, r *http.Request) {
 		re := regexp.MustCompile(`^Export_(.+)_(\d{6})_(\d{4})\.csv$`)
 		matches := re.FindStringSubmatch(fileName)
 
-		timestampStr := parseToTime(matches[2] + matches[3])
+		timestampStr := parseToTime(matches[2] + "_" + matches[3])
 
 		exports = append(exports, models.Export{
 			Name:            fileName,
@@ -108,6 +109,11 @@ func GetAllExportsHandler(w http.ResponseWriter, r *http.Request) {
 			ExportItemCount: countEntrys(fileName),
 		})
 	}
+
+	sort.Slice(exports, func(i, j int) bool {
+		return exports[i].Date.After(exports[j].Date)
+	})
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(exports)
 }
@@ -115,6 +121,7 @@ func GetAllExportsHandler(w http.ResponseWriter, r *http.Request) {
 func parseToTime(timestampStr string) time.Time {
 	parsedTime, err := time.Parse(Time_Format, timestampStr)
 	if err != nil {
+		log.Printf("Time convertion failed!: %s", err)
 		return time.Now()
 	}
 	return parsedTime

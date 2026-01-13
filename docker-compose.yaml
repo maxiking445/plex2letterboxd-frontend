@@ -3,7 +3,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: Plex2Letterboxd
+    container_name: Plex2Letterboxd-frontend
     ports:
-      - "9090:80"
+      - "5670:80"
+    volumes:
+      # if you want to safe your plex settings beyond restart
+      - plex_config:/app/script
+        # if you want to safe your exports beyond restart
+      - plex_data:/app/data
     restart: unless-stopped
+
+volumes:
+  plex_config:
+  plex_data:
