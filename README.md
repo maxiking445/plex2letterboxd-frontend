@@ -38,8 +38,8 @@ Execute this to start frontend app in your selfhosted environment or local machi
 docker run -d \
   -p 5670:80 \
   --name plex2letterboxd-frontend \
-  -v plex_config:/app/script \
-  -v plex_data:/app/data \
+  -v plex2letterboxd_config:/app/script \
+  -v plex2letterboxd_data:/app/data \
   --restart unless-stopped \
   ghcr.io/maxiking445/plex2letterboxd-frontend:latest
 ```
