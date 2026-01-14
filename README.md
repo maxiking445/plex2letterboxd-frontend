@@ -31,6 +31,8 @@ ToDo:
 
 ## How to
 
+After generating CSV login to [letterboxdImport](https://letterboxd.com/import/)) to import it!
+
 ### Via Docker (recommended)
 Execute this to start frontend app in your selfhosted environment or local machine which runs docker.
 
