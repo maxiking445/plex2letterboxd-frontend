@@ -69,8 +69,10 @@ jobs:
         VERSION="${RELEASE_TAG#v}"
         echo "Version without v: $VERSION"
         docker login --username maxiking445 --password ${{secrets.GH_PAT}} ghcr.io 
-        docker build . --tag ghcr.io/maxiking445/plex2letterboxd-frontend:latest
-        docker build . --tag ghcr.io/maxiking445/plex2letterboxd-frontend:$VERSION
+        docker build --pull --no-cache \
+          -t ghcr.io/maxiking445/plex2letterboxd-frontend:latest \
+          -t ghcr.io/maxiking445/plex2letterboxd-frontend:$VERSION .
+        
         docker push ghcr.io/maxiking445/plex2letterboxd-frontend:latest
-        docker push ghcr.io/maxiking445/plex2letterboxd-frontend:$VERSION   
+        docker push ghcr.io/maxiking445/plex2letterboxd-frontend:$VERSION
     
