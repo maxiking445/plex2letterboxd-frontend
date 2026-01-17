@@ -1,0 +1,17 @@
+version: 2
+updates:
+  # Backend (Go)
+  - package-ecosystem: "gomod"
+    directory: "/backend"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "deps"
+
+  # Frontend (Vue / Node)
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "deps"
