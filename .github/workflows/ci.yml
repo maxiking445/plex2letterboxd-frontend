@@ -9,7 +9,7 @@ on:
   
 jobs:
   backend:
-    name: Build & Test Go Backend
+    name: Build Go Backend
     runs-on: ubuntu-latest
 
     defaults:
