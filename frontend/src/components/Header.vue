@@ -3,13 +3,13 @@
     <div class="app">
         <header class="app-header">
             <div class="header-left">
-                <img alt="Vue logo" class="logo" src="../../assets/export.svg" width="32" height="32" />
-                <h1 class="title">Plex2Letterboxd Exporter</h1>
+                <img alt="Vue logo" class="logo" src="../../assets/export.svg" width="28" height="28" />
+                <h1 class="title">Plex2Letterboxd</h1>
             </div>
             <div class="header-right">
                 <IconButton title="Start Export" icon="play" :show-animation=isLoading :active=true
                     @buttonClick="handleStart"></IconButton>
-                <IconButton title="Settings" icon="gear" :active=true @buttonClick="handleSetting"
+                <IconButton title="Settings" icon="gear" :active=false @buttonClick="handleSetting"
                     :show-animation=false></IconButton>
 
                 <a class="github-link" href="https://github.com/maxiking445/plex2letterboxd-frontend" target="_blank"
@@ -62,26 +62,33 @@ const handleSetting = () => {
     gap: 0.5rem;
 }
 
-
-
-
 .github-link {
     filter: invert(1);
+    opacity: 0.5;
+    transition: opacity var(--transition-fast);
+}
+
+.github-link:hover {
+    opacity: 1;
 }
 
 .app-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.75rem 1.25rem;
-    border-bottom: 1px solid #242731;
-    background: #181b20;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-primary);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 40;
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
 }
 
 .logo {
@@ -90,14 +97,16 @@ const handleSetting = () => {
 
 .title {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
-    color: #f9fafb;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
 }
 
 .github-link {
     display: inline-flex;
     align-items: center;
+    margin-left: 0.25rem;
 }
 
 .github-icon {

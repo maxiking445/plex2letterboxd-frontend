@@ -1,7 +1,7 @@
 <template>
-    <div class="additional-link">
+    <div class="icon-btn-wrapper">
         <button :class="{ active: active }" @click="$emit('buttonClick')">
-            <VueSpinner v-if="showAnimation" class="spinner" size="20" color="white" />
+            <VueSpinner v-if="showAnimation" class="spinner" size="16" color="white" />
             <font-awesome-icon v-else :icon="currentIcon" :style="{ color: iconColor }" />
             {{ title }}
         </button>
@@ -23,7 +23,7 @@ const props = defineProps<{
     showAnimation?: Boolean;
 }>();
 
-const iconColor = ref("black");
+const iconColor = ref("currentColor");
 const showAnimationInternal = ref(false);
 const currentIcon = ref("");
 
@@ -35,15 +35,15 @@ watch(
     (newVal, oldVal) => {
         if (newVal) {
             showAnimationInternal.value = true;
-            iconColor.value = "black"
+            iconColor.value = "currentColor"
         } else {
             showAnimationInternal.value = false;
             currentIcon.value = "check";
-            iconColor.value = "limegreen";
+            iconColor.value = "#22c55e";
 
             setTimeout(() => {
                 currentIcon.value = props.icon;
-                iconColor.value = "black"
+                iconColor.value = "currentColor"
             }, 1200);
         }
     },
@@ -52,28 +52,39 @@ watch(
 
 </script>
 
-<style>
-.additional-link button {
-    gap: 5px;
+<style scoped>
+.icon-btn-wrapper button {
+    gap: 6px;
     display: flex;
     align-items: center;
-    padding: 0.3rem 0.8rem;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    border-radius: 0.25rem;
-    border: none;
-    background-color: #2d3138;
-    color: #fff;
+    font-family: inherit;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    background-color: var(--bg-surface);
+    color: var(--text-secondary);
     cursor: pointer;
-
-    transition: background-color 0.2s;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
 }
 
-.additional-link button.active {
-    background-color: #E5A00D;
-    color: #181b20;
+.icon-btn-wrapper button.active {
+    background-color: var(--plex-accent);
+    color: var(--bg-primary);
+    border-color: transparent;
 }
 
-.additional-link button:hover {
-    background-color: #44484f;
+.icon-btn-wrapper button:hover {
+    background-color: var(--bg-surface-hover);
+    color: var(--text-primary);
+    border-color: var(--border-medium);
+}
+
+.icon-btn-wrapper button.active:hover {
+    background-color: var(--plex-accent-hover);
+    color: var(--bg-primary);
+    border-color: transparent;
 }
 </style>

@@ -1,41 +1,41 @@
 <template>
-    <div v-if="visible" class="modal-overlay">
-        <div class="modal">
-            <h3 class="modal-title">Settings</h3>
+    <Transition name="modal">
+        <div v-if="visible" class="modal-overlay" @click.self="close">
+            <div class="modal">
+                <h3 class="modal-title">Settings</h3>
 
-            <label>
-                Plex Base URL
-                <input type="text" v-model="localSettings.baseurl" placeholder="http://localhost:32400" />
-            </label>
-
-
-            <label>
-                Libarys
-                <input type="text" v-model="localSettings.libarys" placeholder="Movies,Series" />
-            </label>
-
-            <label>
-                Plex Token
-                <div style="display: flex;">
-                    <input :type="showPassword ? 'text' : 'password'" v-model="localSettings.token"
-                        placeholder="Your Plex Token" />
-                    <button type="button" class="toggle-password" @click="showPassword = !showPassword">
-                        <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" :style="{ color: '#888' }"
-                            fixed-width />
-                    </button>
+                <div class="form-group">
+                    <label>Plex Base URL</label>
+                    <input type="text" v-model="localSettings.baseurl" placeholder="http://localhost:32400" />
                 </div>
-            </label>
 
-            <div class="modal-actions">
-                <IconButton @buttonClick="handelTest" title="Test" :active=true icon="vial"
-                    :showAnimation="isLoadingTest">
-                </IconButton>
-                <IconButton @buttonClick="validateAndSave" :active=true title="Save" icon="floppy-disk"
-                    :showAnimation="false"> </IconButton>
-                <IconButton @buttonClick="close" title="Cancel" :showAnimation="false" :active="false"> </IconButton>
+                <div class="form-group">
+                    <label>Libraries</label>
+                    <input type="text" v-model="localSettings.libarys" placeholder="Movies,Series" />
+                </div>
+
+                <div class="form-group">
+                    <label>Plex Token</label>
+                    <div class="token-input-wrapper">
+                        <input :type="showPassword ? 'text' : 'password'" v-model="localSettings.token"
+                            placeholder="Your Plex Token" />
+                        <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+                            <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" fixed-width />
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <IconButton @buttonClick="handelTest" title="Test" :active=true icon="vial"
+                        :showAnimation="isLoadingTest">
+                    </IconButton>
+                    <IconButton @buttonClick="validateAndSave" :active=true title="Save" icon="floppy-disk"
+                        :showAnimation="false"> </IconButton>
+                    <IconButton @buttonClick="close" title="Cancel" :showAnimation="false" :active="false"> </IconButton>
+                </div>
             </div>
         </div>
-    </div>
+    </Transition>
 </template>
 
 <script setup lang="ts">
@@ -139,19 +139,11 @@ async function validateAndSave() {
 </script>
 
 <style scoped>
-.modal-title {
-    color: #e5a00d;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e5a00d;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-}
-
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--bg-overlay);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -159,58 +151,133 @@ async function validateAndSave() {
 }
 
 .modal {
-    background: #181b20;
-    color: #f9fafb;
-    padding: 1.5rem;
-    border-radius: 8px;
-    width: 400px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 1.75rem;
+    border-radius: var(--radius-lg);
+    width: 420px;
+    max-width: calc(100vw - 2rem);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-subtle);
 }
 
-label {
-    display: block;
+.modal-title {
+    color: var(--plex-accent);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--plex-accent);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.02em;
+}
+
+.form-group {
     margin-bottom: 1rem;
 }
 
-input[type="password"] {
+.form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.form-group input {
     width: 100%;
-    padding: 0.5rem 2.5rem 0.5rem 0.5rem;
-    border-radius: 4px;
-    border: none;
-    margin-top: 0.25rem;
-    box-sizing: border-box;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-medium);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.form-group input::placeholder {
+    color: var(--text-muted);
+}
+
+.form-group input:focus {
+    border-color: var(--plex-accent);
+}
+
+.token-input-wrapper {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    position: relative;
+}
+
+.token-input-wrapper input {
+    padding-right: 2.5rem;
 }
 
 .toggle-password {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 2.5rem;
     background: none;
     border: none;
-    font-size: 1rem;
     cursor: pointer;
-    color: #888;
-    padding: 0;
-    width: 2rem;
+    color: var(--text-muted);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: color var(--transition-fast);
 }
 
-input {
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 4px;
-    border: none;
-    margin-top: 0.25rem;
+.toggle-password:hover {
+    color: var(--text-secondary);
 }
 
 .modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
 }
 
-.eye-button {
-    height: 100%;
+/* Modal transition */
+.modal-enter-active {
+    transition: opacity 0.2s ease;
+}
 
+.modal-enter-active .modal {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.modal-leave-active {
+    transition: opacity 0.15s ease;
+}
+
+.modal-leave-active .modal {
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.modal-enter-from {
+    opacity: 0;
+}
+
+.modal-enter-from .modal {
+    transform: scale(0.95);
+    opacity: 0;
+}
+
+.modal-leave-to {
+    opacity: 0;
+}
+
+.modal-leave-to .modal {
+    transform: scale(0.95);
+    opacity: 0;
 }
 </style>
