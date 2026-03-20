@@ -1,27 +1,25 @@
 <template>
     <div class="export-card">
-        <div class="export-info">
-            <div class="export-title">{{ title }}</div>
-            <div class="export-meta">Date: {{ formattedDate }}</div>
-            <div class="export-meta">Entries: {{ entries }}</div>
-        </div>
-        <div class="export-tile">
-
-            <div>
-                <button class="bin-btn" @click="removeExport">
-                    <font-awesome-icon icon="trash" size="2x" />
-                </button>
-
+        <div class="accent-bar"></div>
+        <div class="card-body">
+            <div class="export-info">
+                <div class="export-title">{{ title }}</div>
+                <div class="export-details">
+                    <span class="export-meta">{{ formattedDate }}</span>
+                    <span class="export-separator">&middot;</span>
+                    <span class="export-meta">{{ entries }} entries</span>
+                </div>
             </div>
-            <div>
-                <button class="download-btn" @click="downloadCSV">
-                    <font-awesome-icon icon="download" size="2x" />
+            <div class="export-actions">
+                <button class="action-btn download-btn" @click="downloadCSV" title="Download CSV">
+                    <font-awesome-icon icon="download" />
                 </button>
-
+                <button class="action-btn delete-btn" @click="removeExport" title="Delete export">
+                    <font-awesome-icon icon="trash" />
+                </button>
             </div>
         </div>
     </div>
-
 </template>
 
 <script setup lang="ts">
@@ -76,99 +74,97 @@ async function downloadCSV() {
 
 </script>
 
-<style>
+<style scoped>
 .export-card {
     display: flex;
-    align-items: stretch;
-    justify-content: end;
-
-    width: 100%;
-    padding: 16px 20px;
-
-    background-color: #E5A00D;
-    border: 1px solid #000000;
-    border-radius: 14px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
+.export-card:hover {
+    background: var(--bg-surface-hover);
+    border-color: var(--border-medium);
+}
+
+.accent-bar {
+    width: 3px;
+    flex-shrink: 0;
+    background: var(--plex-accent);
+}
+
+.card-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    gap: 1rem;
+}
 
 .export-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
+    min-width: 0;
 }
-
-
-.export-tile {
-    display: flex;
-    align-items: stretch;
-    justify-content: end;
-
-    width: 100%;
-    padding: 16px 20px;
-
-    background-color: #E5A00D;
-}
-
 
 .export-title {
-    font-size: 1rem;
-    font-weight: 800;
-    color: #111827;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.export-details {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
 }
 
 .export-meta {
-    font-size: 0.85rem;
-    font-weight: 800;
-    color: #6b7280;
+    font-size: 0.78rem;
+    color: var(--text-muted);
 }
 
-.download-btn {
-    height: 100%;
-    width: 72px;
-    min-width: 72px;
-    font-size: 15px;
-    border: none;
-    background-color: #E5A00D;
+.export-separator {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+}
 
-    cursor: pointer;
+.export-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
 
+.action-btn {
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    transition: background-color 0.2s ease;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    transition: all var(--transition-fast);
 }
 
 .download-btn:hover {
-    font-size: 16px;
+    background: var(--plex-accent-dim);
+    color: var(--plex-accent);
 }
 
-.download-btn:active {
-    background-color: #fce305;
-}
-
-.bin-btn {
-    height: 100%;
-    width: 72px;
-    min-width: 72px;
-    font-size: 15px;
-    border: none;
-    background-color: #E5A00D;
-
-    cursor: pointer;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-
-    transition: background-color 0.2s ease;
-}
-
-.bin-btn:hover {
-    font-size: 16px;
-}
-
-.bin-btn:active {
-    background-color: #fce305;
+.delete-btn:hover {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
 }
 </style>

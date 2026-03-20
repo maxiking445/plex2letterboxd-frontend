@@ -1,11 +1,19 @@
 <template>
   <div class="export-panel">
-    <h3>Exports</h3>
+    <div class="panel-header">
+      <h3>Exports</h3>
+    </div>
     <div class="export-list">
-      <div v-if="exports.length === 0" class="no-data">No exports yet</div>
-      <div v-for="exp in exports" :key="exp.name" class="export-item">
-        <ExportItem :title="exp.name" :entries="exp.exportItemCount" :date="exp.date" @removed="handleRemoved" />
+      <div v-if="exports.length === 0" class="no-data">
+        <font-awesome-icon icon="download" class="no-data-icon" />
+        <span>No exports yet</span>
+        <span class="no-data-hint">Start an export to see it here</span>
       </div>
+      <TransitionGroup name="export" tag="div">
+        <div v-for="exp in exports" :key="exp.name" class="export-item">
+          <ExportItem :title="exp.name" :entries="exp.exportItemCount" :date="exp.date" @removed="handleRemoved" />
+        </div>
+      </TransitionGroup>
     </div>
   </div>
 </template>
@@ -33,7 +41,7 @@ onMounted(async () => {
 watch(
   () => props.refreshTrigger,
   async (newVal, oldVal) => {
-    if (newVal !== oldVal) { 
+    if (newVal !== oldVal) {
       console.log("TRIGGERT", newVal, oldVal)
       try {
         exports.value = await loadExports()
@@ -52,24 +60,28 @@ function handleRemoved(id: string) {
 
 <style scoped>
 .export-panel {
-  color: #f9fafb;
-  padding: 1rem;
-  border-radius: 8px;
+  color: var(--text-primary);
+  padding: 1.5rem 0;
   width: 100%;
   max-width: 600px;
-
-
-  height: calc(100vh - 2rem);
+  height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
 }
 
-.export-panel h3 {
-  margin: 0 0 0.75rem 0;
-  font-size: 1.2rem;
-  border-bottom: 1px solid #2d3138;
-  padding-bottom: 0.5rem;
+.panel-header {
   flex-shrink: 0;
+  margin-bottom: 1rem;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.8rem;
 }
 
 .export-list {
@@ -79,34 +91,63 @@ function handleRemoved(id: string) {
 }
 
 .export-list::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .export-list::-webkit-scrollbar-track {
-  background: #1f2228;
-  border-radius: 4px;
+  background: transparent;
+  border-radius: 3px;
 }
 
 .export-list::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 4px;
-  border: 2px solid #1f2228;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.export-list::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .export-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0.25rem;
-  border-bottom: 1px solid #2d3138;
-}
-
-.export-item:last-child {
-  border-bottom: none;
+  margin-bottom: 0.6rem;
 }
 
 .no-data {
-  text-align: center;
-  color: #888;
-  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+
+.no-data-icon {
+  font-size: 2rem;
+  opacity: 0.3;
+  margin-bottom: 0.25rem;
+}
+
+.no-data-hint {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+/* List transitions */
+.export-enter-active {
+  transition: all 0.3s ease;
+}
+
+.export-leave-active {
+  transition: all 0.2s ease;
+}
+
+.export-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.export-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
 }
 </style>

@@ -23,9 +23,10 @@ function handleFinishedExport() {
 .app-container {
   display: flex;
   justify-content: center;
-  align-items: top;
-  height: 100vh;
-  background-color: #181b20;
+  align-items: flex-start;
+  min-height: calc(100vh - 60px);
+  background-color: var(--bg-primary);
+  padding: 0 1rem;
 }
 
 .content {
