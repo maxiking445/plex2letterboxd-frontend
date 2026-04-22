@@ -16,7 +16,7 @@
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/vue-fontawesome": "^3.2.0",
-    "vue": "^3.5.32",
+    "vue": "^3.5.33",
     "vue-spinner": "^3.0.1",
     "vue-toastification": "^2.0.0-rc.5",
     "vue3-spinner": "^0.0.17",
