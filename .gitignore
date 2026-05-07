@@ -31,7 +31,6 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
-backend/data/*
 
 
 # IntelliJ IDEA
