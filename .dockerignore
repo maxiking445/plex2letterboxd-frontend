@@ -1,0 +1,16 @@
+.git
+.github
+
+backend/script/env
+backend/script/build
+backend/script/**/__pycache__
+backend/script/**/*.pyc
+
+frontend/node_modules
+frontend/dist
+node_modules
+
+.env
+*.csv
+*.out
+coverage.*
