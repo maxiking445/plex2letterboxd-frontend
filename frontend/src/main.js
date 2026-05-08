@@ -5,6 +5,7 @@ import "vue-toastification/dist/index.css";
 import Toast from "vue-toastification";
 import { VueSpinnersPlugin } from "vue3-spinner";
 
+import "vue3-select-component/styles";
 // FontAwesome
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -20,6 +21,8 @@ import {
   faTrash,
   faEyeSlash,
   faEye,
+  faChevronDown,
+  faRefresh 
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -31,7 +34,9 @@ library.add(
   faCheck,
   faTrash,
   faEyeSlash,
-  faEye
+  faEye,
+  faChevronDown,
+  faRefresh
 );
 
 createApp(App)
