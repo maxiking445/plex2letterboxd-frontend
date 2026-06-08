@@ -18,7 +18,7 @@
     "@fortawesome/vue-fontawesome": "^3.2.0",
     "typescript": "^6.0.3",
     "vue": "^3.5.35",
-    "vue-spinner": "^3.0.1",
+    "vue-spinner": "^3.0.2",
     "vue-toastification": "^2.0.0-rc.5",
     "vue3-select-component": "^0.16.2",
     "vue3-spinner": "^0.0.17",
