@@ -7,6 +7,8 @@
                 <h1 class="title">Plex2Letterboxd</h1>
             </div>
             <div class="header-right">
+                <IconButton title="Import to Letterboxd" icon="arrow-up-right-from-square" :active=false
+                    :show-animation=false @buttonClick="handleImport"></IconButton>
                 <IconButton title="Start Export" icon="play" :show-animation=isLoading :active=true
                     @buttonClick="handleStart"></IconButton>
                 <IconButton title="Settings" icon="gear" :active=false @buttonClick="handleSetting"
@@ -48,6 +50,10 @@ const handleStart = () => {
         isLoading.value = false
         toast.error("Check your config, something went wrong.")
     })
+}
+
+const handleImport = () => {
+    window.open('https://letterboxd.com/import/', '_blank')
 }
 
 const handleSetting = () => {
