@@ -21,7 +21,7 @@ For years I have been using this good old Python script from [mtimkovich](https:
 Features:
 * Shows all past exports
 * Test your Plex API
-* Configure which libary to export
+* Configure which library to export
 * Saves settings
 
 
@@ -31,7 +31,7 @@ ToDo:
 
 ## How to
 
-After generating CSV login to [letterboxdImport](https://letterboxd.com/import/)) to import it!
+After generating CSV login to [letterboxdImport](https://letterboxd.com/import/) to import it!
 
 ### Via Docker (recommended)
 Execute this to start frontend app in your selfhosted environment or local machine which runs docker.
@@ -62,7 +62,7 @@ You can now open [http://localhost:5670](http://localhost:5670)
 Node 22 required
 Go 1.23 required
 
-Install Pyhton
+Install Python
  ```bash
 cd backend/script
 python -m venv env
