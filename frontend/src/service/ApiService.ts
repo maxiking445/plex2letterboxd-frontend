@@ -63,12 +63,14 @@ export async function loadExport(id: string): Promise<Blob> {
   }
 }
 
-export async function getSettings(): Promise<ModelsSettings> {
+export async function getSettings(showToast = true): Promise<ModelsSettings> {
   try {
     return await settingsAPI.settingsGet();
   } catch (err) {
     console.error("getSettings API failed:", err);
-    toast.error("Loading settings failed!");
+    if (showToast) {
+      toast.error("Loading settings failed!");
+    }
     throw err;
   }
 }

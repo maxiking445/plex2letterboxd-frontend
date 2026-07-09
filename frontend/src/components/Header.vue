@@ -1,5 +1,5 @@
 <template>
-    <SettingsDialog v-model:visible="showSettings" />
+    <SettingsDialog v-model:visible="showSettings" @saved="handleSettingsSaved" />
     <div class="app">
         <header class="app-header">
             <div class="header-left">
@@ -11,8 +11,8 @@
                     :show-animation=false @buttonClick="handleImport"></IconButton>
                 <IconButton title="Start Export" icon="play" :show-animation=isLoading :active=true
                     @buttonClick="handleStart"></IconButton>
-                <IconButton title="Settings" icon="gear" :active=false @buttonClick="handleSetting"
-                    :show-animation=false></IconButton>
+                <IconButton title="Settings" :icon="settingsStatusIcon" :status="settingsStatus" :active=false
+                    @buttonClick="handleSetting" :show-animation=false></IconButton>
 
                 <a class="github-link" href="https://github.com/maxiking445/plex2letterboxd-frontend" target="_blank"
                     rel="noopener noreferrer">
@@ -25,15 +25,18 @@
 </template>
 
 <script setup lang="ts">
-import { startExport } from '@/service/ApiService';
-import { ref } from 'vue';
+import { getSettings, startExport } from '@/service/ApiService';
+import { computed, onMounted, ref } from 'vue';
 import { useToast } from 'vue-toastification'
 import SettingsDialog from './SettingsDialog.vue';
 import IconButton from './IconButton.vue';
 
+type SettingsStatus = 'checking' | 'ready' | 'required';
+
 const showSettings = ref(false);
 const toast = useToast()
 var isLoading = ref(false)
+const settingsStatus = ref<SettingsStatus>('checking')
 
 
 const emit = defineEmits<{
@@ -51,6 +54,35 @@ const handleStart = () => {
     })
 }
 
+const settingsStatusIcon = computed(() => {
+    if (settingsStatus.value === 'ready') return 'check';
+    if (settingsStatus.value === 'checking') return 'spinner';
+    return 'circle-exclamation';
+})
+
+const hasCompleteSettings = (settings: Awaited<ReturnType<typeof getSettings>>) => {
+    return Boolean(
+        settings.baseurl?.trim() &&
+        settings.token?.trim() &&
+        Array.isArray(settings.libarys) &&
+        settings.libarys.length > 0
+    );
+}
+
+const refreshSettingsStatus = async () => {
+    settingsStatus.value = 'checking'
+    try {
+        const settings = await getSettings(false)
+        settingsStatus.value = hasCompleteSettings(settings) ? 'ready' : 'required'
+    } catch (err) {
+        settingsStatus.value = 'required'
+    }
+}
+
+const handleSettingsSaved = () => {
+    refreshSettingsStatus()
+}
+
 const handleImport = () => {
     window.open('https://letterboxd.com/import/', '_blank')
 }
@@ -58,6 +90,10 @@ const handleImport = () => {
 const handleSetting = () => {
     showSettings.value = true;
 }
+
+onMounted(() => {
+    refreshSettingsStatus()
+})
 </script>
 
 <style scoped>
