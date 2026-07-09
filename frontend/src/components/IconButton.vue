@@ -1,6 +1,6 @@
 <template>
     <div class="icon-btn-wrapper">
-        <button :class="{ active: active }" @click="$emit('buttonClick')">
+        <button :class="buttonClasses" @click="$emit('buttonClick')">
             <VueSpinner v-if="showAnimation" class="spinner" size="16" color="white" />
             <font-awesome-icon v-else :icon="currentIcon" :style="{ color: iconColor }" />
             {{ title }}
@@ -13,7 +13,7 @@
 import {
     VueSpinner,
 } from 'vue3-spinners';
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 import { ref } from 'vue';
 
 const props = defineProps<{
@@ -21,6 +21,7 @@ const props = defineProps<{
     icon?: string;
     active: Boolean;
     showAnimation?: Boolean;
+    status?: 'ready' | 'required' | 'checking';
 }>();
 
 const iconColor = ref("currentColor");
@@ -29,6 +30,21 @@ const currentIcon = ref("");
 
 showAnimationInternal.value = false;
 currentIcon.value = props.icon;
+
+const buttonClasses = computed(() => ({
+    active: props.active,
+    ready: props.status === 'ready',
+    required: props.status === 'required',
+    checking: props.status === 'checking',
+}));
+
+watch(
+    () => props.icon,
+    (newVal) => {
+        currentIcon.value = newVal || "";
+        iconColor.value = "currentColor";
+    },
+);
 
 watch(
     () => props.showAnimation,
@@ -86,5 +102,40 @@ watch(
     background-color: var(--plex-accent-hover);
     color: var(--bg-primary);
     border-color: transparent;
+}
+
+.icon-btn-wrapper button.ready {
+    border-color: rgba(34, 197, 94, 0.55);
+    color: #22c55e;
+}
+
+.icon-btn-wrapper button.ready:hover {
+    border-color: rgba(34, 197, 94, 0.8);
+    color: #22c55e;
+}
+
+.icon-btn-wrapper button.required {
+    border-color: rgba(239, 68, 68, 0.55);
+    color: #ef4444;
+}
+
+.icon-btn-wrapper button.required:hover {
+    border-color: rgba(239, 68, 68, 0.8);
+    color: #ef4444;
+}
+
+.icon-btn-wrapper button.checking {
+    border-color: rgba(229, 160, 13, 0.55);
+    color: var(--plex-accent);
+}
+
+.icon-btn-wrapper button.checking svg {
+    animation: icon-btn-spin 0.9s linear infinite;
+}
+
+@keyframes icon-btn-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 </style>

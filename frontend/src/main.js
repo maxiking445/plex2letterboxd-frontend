@@ -22,7 +22,10 @@ import {
   faEyeSlash,
   faEye,
   faChevronDown,
-  faRefresh 
+  faRefresh,
+  faSpinner,
+  faCircleExclamation,
+  faArrowUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -36,7 +39,10 @@ library.add(
   faEyeSlash,
   faEye,
   faChevronDown,
-  faRefresh
+  faRefresh,
+  faSpinner,
+  faCircleExclamation,
+  faArrowUpRightFromSquare,
 );
 
 createApp(App)

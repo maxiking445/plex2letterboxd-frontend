@@ -223,6 +223,7 @@ async function validateAndSave() {
       libarys: localSettings.libarys,
     });
     toast.success("Settings saved!");
+    emit("saved");
     close();
   } catch (err) {
     toast.error("Failed to save settings");
