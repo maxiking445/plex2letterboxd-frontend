@@ -43,12 +43,11 @@ const emit = defineEmits<{
 const handleStart = () => {
     isLoading.value = true
     startExport().then(res => {
-        console.log(res)
         isLoading.value = false
         emit('finishedExport')
     }).catch(err => {
         isLoading.value = false
-        toast.error("Check your config, something went wrong.")
+        toast.error("Check your settings. Something went wrong.")
     })
 }
 

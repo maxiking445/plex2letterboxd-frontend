@@ -42,7 +42,6 @@ watch(
   () => props.refreshTrigger,
   async (newVal, oldVal) => {
     if (newVal !== oldVal) {
-      console.log("TRIGGERT", newVal, oldVal)
       try {
         exports.value = await loadExports()
       } catch (err) {

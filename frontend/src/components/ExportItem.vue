@@ -42,12 +42,12 @@ const emit = defineEmits<{
 
 const formattedDate = computed(() => {
     if (!props.date) return "";
-    return new Intl.DateTimeFormat("en-EN", {}).format(new Date(props.date));
+    return new Intl.DateTimeFormat("en-US", {}).format(new Date(props.date));
 });
 
 async function removeExport() {
     ApiService.removeExport(props.title).then(() => {
-        toast.success("Removed Export")
+        toast.success("Export removed")
         emit('removed', props.title)
     })
 }

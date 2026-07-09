@@ -23,7 +23,7 @@
               :is-multi="true"
               placeholder="Select libraries"
             />
-            <button type="button" class="refresh" @click="handleLoadLibaries">
+            <button type="button" class="refresh" @click="handleLoadLibraries">
               <font-awesome-icon icon="fa-refresh" />
             </button>
           </div>
@@ -53,7 +53,7 @@
         <div class="modal-actions">
           <IconButton
             @buttonClick="handleTest"
-            title="Test"
+            title="Test Connection"
             :active="true"
             icon="vial"
             :showAnimation="isLoadingTest"
@@ -62,7 +62,7 @@
           <IconButton
             @buttonClick="validateAndSave"
             :active="true"
-            title="Save"
+            title="Save Settings"
             icon="floppy-disk"
             :showAnimation="false"
           >
@@ -90,7 +90,7 @@ import VueSelect from "vue3-select-component";
 const toast = useToast();
 const isLoadingTest = ref<boolean>(false);
 
-const plexLibary = ref<PlexLibaryResponse>();
+const plexLibrary = ref<PlexLibraryResponse>();
 
 const props = defineProps({
   visible: Boolean,
@@ -106,30 +106,30 @@ const localSettings = reactive({
   libarys: [] as string[],
 });
 
-interface PlexLibaryResponse {
-  MediaContainer: PlexLibaryMediaResponse;
+interface PlexLibraryResponse {
+  MediaContainer: PlexLibraryMediaResponse;
 }
 
-interface PlexLibaryMediaResponse {
-  Directory: PlexLibaryDirectoryResponse[];
+interface PlexLibraryMediaResponse {
+  Directory: PlexLibraryDirectoryResponse[];
 }
 
-interface PlexLibaryDirectoryResponse {
+interface PlexLibraryDirectoryResponse {
   title: string;
   type: string;
 }
 
 const libraryOptions = computed(
   () =>
-    plexLibary.value?.MediaContainer.Directory.map((lib) => ({
+    plexLibrary.value?.MediaContainer.Directory.map((lib) => ({
       label: lib.title,
       value: lib.title,
     })) ?? [],
 );
 
-function initLibaries() {
+function initLibraries() {
   if (localSettings.baseurl != null && localSettings.token != null) {
-    handleLoadLibaries();
+    handleLoadLibraries();
   }
 }
 
@@ -146,8 +146,7 @@ watch(
           : res.libarys
             ? res.libarys.split(",").map((s) => s.trim())
             : [];
-        console.error(res);
-        initLibaries();
+        initLibraries();
       } catch (err) {
         console.error(err);
         toast.error("Could not load settings");
@@ -160,7 +159,7 @@ function close() {
   emit("update:visible", false);
 }
 
-async function handleLoadLibaries() {
+async function handleLoadLibraries() {
   if (!localSettings.baseurl || !localSettings.token) {
     toast.error("Please fill Base URL and Token first");
     return;
@@ -173,19 +172,18 @@ async function handleLoadLibaries() {
       },
     });
     if (!response.ok) {
-      toast.error("Response was fault: ${err.message}");
       throw new Error(`HTTP ${response.status}`);
     }
-    plexLibary.value = await response.json();
+    plexLibrary.value = await response.json();
   } catch (err: any) {
-    toast.error(`Libaries could not be fetched: ${err.message}`);
+    toast.error(`Libraries could not be fetched: ${err.message}`);
   } finally {
     isLoadingTest.value = false;
   }
 }
 
 async function handleTest() {
-  handleLoadLibaries();
+  handleLoadLibraries();
   if (!localSettings.baseurl || !localSettings.token) {
     toast.error("Please fill Base URL and Token first");
     return;
@@ -202,7 +200,6 @@ async function handleTest() {
     });
 
     if (!response.ok) {
-      toast.error("Response was fault: ${err.message}");
       throw new Error(`HTTP ${response.status}`);
     }
     toast.success(`Connection successful!`);
