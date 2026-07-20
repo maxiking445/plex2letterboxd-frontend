@@ -13,7 +13,7 @@
     "generate:api": "openapi-generator-cli generate -i ../backend/docs/swagger.json -g typescript-fetch -o src/generated/api --additional-properties=typescriptThreePlus=true,basePath=/api"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^7.3.0",
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
     "@fortawesome/free-solid-svg-icons": "^7.3.1",
     "@fortawesome/vue-fontawesome": "^3.3.2",
     "typescript": "^7.0.2",
