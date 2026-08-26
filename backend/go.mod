@@ -3,7 +3,7 @@ module github.com/maxiking445/plex-letterboxd-backend
 go 1.22.2
 
 require (
-	github.com/lithammer/shortuuid/v4 v4.2.0
+	github.com/lithammer/shortuuid/v4 v4.3.0
 	github.com/swaggo/http-swagger v1.3.4
 )
 
